@@ -14,19 +14,30 @@
     <title>GEMSTORE</title>
 </head>
 
-<body ng-controller="StoreController as store">
-<div class="container">
+<body ng-controller="StoreController">
+<div class="container" ng-controller="TabController as panel">
     <h1>{{"Bienvenue dans ma Boutique de pierre précieuses"}}</h1>
     <h3 style="flex: auto;">nos Produits : </h3>
-    <div  ng-repeat="product in store.products" class=" alert alert-primary row products">
+    <div style="display: flex;">
+        <span style="flex: auto;display: flex;">
+            <span ng-click="panel.orderBy('name')" style="flex: auto;margin: auto 0;user-select: none;"> name </span>
+            <span ng-click="panel.orderBy('date')" style="flex: auto;margin: auto 0;user-select: none;"> date</span>
+            <span ng-click="panel.orderBy('canPurchase')" style="flex: auto;margin: auto 0;user-select: none;"> availability</span>
+            <span ng-click="panel.orderBy('price')" style="flex: auto;margin: auto 0;user-select: none;">price</span>
+            <span style="flex: auto;">&nbsp</span>
+        </span>
+    </div>
+    <div  ng-repeat="product in products | orderBy:panel.getOrder():panel.getReverse()" class=" alert alert-primary row products">
         <hr>
         <div style="display: flex;">
             <span style="flex: auto;display: flex;">
                 <span style="flex: auto;margin: auto 0;"> {{product.name}}</span>
+                <span style="flex: auto;margin: auto 0;"> {{product.date | date : format : timezone}}</span>
                 <span style="flex: auto;margin: auto 0;"> {{product.canPurchase ? 'available' : 'not available'}} </span>
-                <span style="flex: auto;margin: auto 0;">${{product.price}}</span>
+                <span style="flex: auto;margin: auto 0;">{{product.price | currency:"€":2}}</span>
             </span>
             <button ng-show="product.canPurchase">Add to Cart</button>
+            <button style="background: grey;" ng-show="!product.canPurchase">not available</button>
         </div>
     </div>
 </div>
